@@ -108,22 +108,48 @@ docker-compose up --build
 
 ## 📸 Captures d'écran
 
-### Page d'accueil
+### 🏠 Interface Client
+
+#### Page d'accueil
 ![Accueil](docs/assets/screenshots/accueil.png)
 
-### Administration
-![Admin](docs/assets/screenshots/admin.png)
+#### Catalogue par catégorie
+![Catégorie Disque Dur](docs/assets/screenshots/categorie_disque_dur.png)
 
-### Gestion catégories
-![Catégories](docs/assets/screenshots/categories.png)
+#### Panier
+![Panier](docs/assets/screenshots/panier.png)
 
-### Processus commande
+![Panier Vide](docs/assets/screenshots/panier_vide.png)
+
+#### Processus de commande
 
 <div align="center">
-  <img src="docs/assets/screenshots/commande_donnees.png" width="30%">
-  <img src="docs/assets/screenshots/commande_livraison.png" width="30%">
-  <img src="docs/assets/screenshots/commande_paiement.png" width="30%">
+  <h4>Étape 1 : Données personnelles</h4>
+  <img src="docs/assets/screenshots/commande_donnees.png" width="45%">
+  
+  <h4>Étape 2 : Livraison et point relais</h4>
+  <img src="docs/assets/screenshots/commande_livraison.png" width="45%">
+  <img src="docs/assets/screenshots/point_relais.png" width="45%">
+  
+  <h4>Étape 3 : Paiement</h4>
+  <img src="docs/assets/screenshots/commande_paiement.png" width="45%">
+  
+  <h4>Étape 4 : Récapitulatif</h4>
+  <img src="docs/assets/screenshots/recap_commande.png" width="45%">
 </div>
+
+#### Historique des commandes
+![Mes Commandes](docs/assets/screenshots/mes_commandes.png)
+
+### 🛠️ Interface Administration
+
+#### Dashboard Admin
+![Dashboard Admin](docs/assets/screenshots/admin_accueil.png)
+
+#### Gestion des catégories
+![Gestion Catégories 1](docs/assets/screenshots/admin_categorie1.png)
+
+![Gestion Catégories 2](docs/assets/screenshots/admin_categorie2.png)
 
 ## 🔄 Routing
 
