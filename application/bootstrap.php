@@ -20,17 +20,18 @@ define('ROOT_PATH', dirname(__DIR__) . '/');
 $script_name = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
 $script_dir = dirname($script_name);
 
-// Détecter si on est sur Render (pas de sous-dossier dans SCRIPT_NAME)
-// Sur Render, le DocumentRoot pointe vers /var/www/html/public, donc SCRIPT_NAME = /index.php
-// En localhost avec WAMP, SCRIPT_NAME = /prin_boutique/public/index.php
-$is_render = (strpos($script_name, '/public/') === false && $script_dir === '/');
+// Détecter si on est sur Render
+// Sur Render, le DocumentRoot pointe vers /var/www/html/public
+// Donc SCRIPT_NAME = /index.php et dirname = /
+// En localhost avec WAMP, SCRIPT_NAME = /prin_boutique/public/index.php et dirname = /prin_boutique/public
+$is_render = (strpos($script_name, '/public/') === false && ($script_dir === '/' || $script_dir === '\\' || $script_dir === '.'));
 
 // Si on est dans un sous-dossier (ex: /prin_boutique/public/), garder le chemin complet
-// Si on est à la racine (ex: /), utiliser le chemin vide
+// Si on est à la racine (ex: /), utiliser le chemin vide (Render)
 $base_asset_path = rtrim($script_dir, '/');
 
 // Si le script est à la racine (/index.php), le chemin de base est vide
-if ($script_dir === '/' || $script_dir === '.') {
+if ($script_dir === '/' || $script_dir === '\\' || $script_dir === '.') {
     $base_asset_path = '';
 }
 
