@@ -1,4 +1,9 @@
 <?php
+/**
+ * ⚠️ CRITIQUE : Charger la configuration Database AVANT d'utiliser la classe
+ * Ce fichier DOIT être chargé pour que Database::get*() fonctionne
+ */
+require_once __DIR__ . '/../../config/database.php';
 
 class ModelePDO {
 
