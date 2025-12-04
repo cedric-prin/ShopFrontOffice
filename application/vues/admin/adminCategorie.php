@@ -81,7 +81,7 @@
     </div>
 
     <div class="logout-container">
-        <button type="submit" name ="accueil"> Accueil <a href="index.php?controleur=Admin&action=afficherIndex&display=minimal" > (<?php echo $_SESSION['login_admin'] ?>)</a></button>
+        <a href="<?php echo (BASE_ASSET_PATH ? BASE_ASSET_PATH . '/' : '') . 'index.php?controleur=Admin&action=afficherIndex&display=minimal'; ?>" class="btn-accueil">Accueil (<?php echo $_SESSION['login_admin'] ?>)</a>
     </div>
 
 </body>
