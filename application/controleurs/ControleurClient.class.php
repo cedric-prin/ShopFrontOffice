@@ -20,6 +20,8 @@ class ControleurClient {
     public function traiterInscription() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                error_log("=== ControleurClient::traiterInscription() - DÉBUT ===");
+                
                 // Activer l'affichage des erreurs
                 ini_set('display_errors', 1);
                 ini_set('display_startup_errors', 1);
@@ -45,27 +47,44 @@ class ControleurClient {
 
                 // Validation des données
                 if ($nom && $prenom && $email && $mdp && $jour && $mois && $annee) {
-                    // Vérifier si l'email existe déjà
+                    error_log("Validation OK - Vérification email existant...");
+                    
+                    // ⚠️ CRITIQUE : Utiliser UNIQUEMENT GestionClient (qui utilise ModelePDO::getPDO())
+                    // Aucune connexion directe dans le contrôleur
                     $client_existant = GestionClient::getClientParEmail($email);
                     if ($client_existant) {
+                        error_log("Email déjà existant: $email");
                         header('Location: index.php?controleur=Client&action=afficherInscription&display=minimal&error=email_existe');
                         return;
                     }
 
-                    // Ajouter le client dans la base de données
+                    error_log("Email disponible - Création du client via GestionClient::creerClient()");
+                    
+                    // ⚠️ CRITIQUE : Utiliser UNIQUEMENT GestionClient::creerClient()
+                    // Cette méthode utilise ModelePDO::getPDO() pour la connexion Aiven
                     if (GestionClient::creerClient($nom, $prenom, $email, $mdp, $date_naissance)) {
+                        error_log("Client créé avec succès - Redirection vers connexion");
                         header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&inscription=success');
                         return;
                     } else {
-                        throw new Exception("Erreur lors de la création du client");
+                        error_log("ERREUR: GestionClient::creerClient() a retourné false");
+                        throw new Exception("Erreur lors de la création du client dans la base de données");
                     }
                 } else {
                     error_log("Données manquantes - Nom: $nom, Prénom: $prenom, Email: $email, Jour: $jour, Mois: $mois, Année: $annee");
                     header('Location: index.php?controleur=Client&action=afficherInscription&display=minimal&error=champs');
                     return;
                 }
+            } catch (PDOException $e) {
+                error_log("ERREUR PDO dans traiterInscription(): " . $e->getMessage());
+                error_log("Code: " . $e->getCode());
+                error_log("Trace: " . $e->getTraceAsString());
+                // Afficher l'erreur pour le débogage
+                die("Erreur de base de données : " . $e->getMessage());
             } catch (Exception $e) {
-                // Afficher l'erreur directement pour le débogage
+                error_log("ERREUR dans traiterInscription(): " . $e->getMessage());
+                error_log("Trace: " . $e->getTraceAsString());
+                // Afficher l'erreur pour le débogage
                 die("Erreur : " . $e->getMessage());
             }
         }

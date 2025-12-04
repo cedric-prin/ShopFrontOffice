@@ -10,21 +10,25 @@ class GestionClient extends ModelePDO {
 
     /**
      * Se connecter à la base de données
-     * Utilise la connexion centralisée ModelePDO avec configuration Aiven
-     * ⚠️ NE JAMAIS créer de connexion directe - TOUJOURS utiliser ModelePDO
+     * Utilise UNIQUEMENT ModelePDO::getPDO() pour la connexion Aiven
+     * ⚠️ CRITIQUE : NE JAMAIS créer de connexion directe - TOUJOURS utiliser ModelePDO::getPDO()
      */
     public static function seConnecter() {
-        // Utiliser la méthode parente qui gère la connexion Aiven
-        parent::seConnecter();
-        // Récupérer la connexion PDO partagée depuis ModelePDO
-        self::$pdoCnxBase = parent::getPDO();
+        // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() pour garantir la connexion Aiven
+        // Ne pas utiliser parent::seConnecter() puis parent::getPDO() séparément
+        // Utiliser directement getPDO() qui appelle seConnecter() automatiquement
+        self::$pdoCnxBase = ModelePDO::getPDO();
         
         // Vérifier que la connexion a réussi
         if (self::$pdoCnxBase === null) {
             error_log('ERREUR CRITIQUE: Connexion PDO échouée dans GestionClient::seConnecter()');
+            error_log('ModelePDO::getPDO() a retourné null');
             error_log('Vérifiez que DB_PASSWORD est défini dans les variables d\'environnement Render');
-            throw new Exception('Impossible de se connecter à la base de données Aiven');
+            error_log('Vérifiez les logs de ModelePDO::seConnecter() pour plus de détails');
+            throw new Exception('Impossible de se connecter à la base de données Aiven - Connexion PDO null');
         }
+        
+        error_log('GestionClient::seConnecter() - Connexion Aiven établie avec succès');
     }
 
     /**
@@ -39,18 +43,21 @@ class GestionClient extends ModelePDO {
      */
     public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance) {
         try {
-            error_log("Début de la création du client dans la base de données", 0);
+            error_log("=== GestionClient::creerClient() - DÉBUT ===");
+            error_log("Données: nom=$nom, prenom=$prenom, email=$email");
             
-            // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::seConnecter() pour la connexion Aiven
+            // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
+            // seConnecter() appelle ModelePDO::getPDO() qui garantit la connexion Aiven
             self::seConnecter();
             
-            // Vérifier que la connexion est bien établie
+            // Double vérification que la connexion est bien établie
             if (self::$pdoCnxBase === null) {
-                error_log("ERREUR: Connexion PDO null après seConnecter()");
-                throw new PDOException("Connexion à la base de données Aiven échouée");
+                error_log("ERREUR CRITIQUE: Connexion PDO null après seConnecter()");
+                error_log("ModelePDO::getPDO() a retourné null - Vérifiez les variables d'environnement Render");
+                throw new PDOException("Connexion à la base de données Aiven échouée - PDO null");
             }
             
-            error_log("Connexion à la base de données Aiven établie", 0);
+            error_log("Connexion Aiven établie - PDO prêt pour les requêtes");
             self::$requete = "INSERT INTO client (nom, prenom, email, mdp, date_naissance) 
                              VALUES (:nom, :prenom, :email, :mdp, :date_naissance)";
             
@@ -90,7 +97,15 @@ class GestionClient extends ModelePDO {
      */
     public static function getClientById($id) {
         try {
+            // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
             self::seConnecter();
+            
+            // Vérifier que la connexion est bien établie
+            if (self::$pdoCnxBase === null) {
+                error_log("ERREUR: Connexion PDO null dans getClientById()");
+                return null;
+            }
+            
             self::$requete = "SELECT * FROM client WHERE id = :id";
             self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
             self::$pdoStResults->bindValue(':id', $id, PDO::PARAM_INT);
@@ -135,7 +150,15 @@ class GestionClient extends ModelePDO {
      * @return array La liste de tous les clients
      */
     public static function getTousLesClients() {
+        // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
         self::seConnecter();
+        
+        // Vérifier que la connexion est bien établie
+        if (self::$pdoCnxBase === null) {
+            error_log("ERREUR: Connexion PDO null dans getTousLesClients()");
+            return [];
+        }
+        
         self::$requete = "SELECT * FROM client ORDER BY nom, prenom";
         self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
         self::$pdoStResults->execute();
@@ -177,7 +200,15 @@ class GestionClient extends ModelePDO {
      * @return bool True si la modification a réussi, false sinon
      */
     public static function modifierClient($id, $nom, $prenom, $email, $mot_de_passe, $date_naissance, $rue, $codePostal, $ville, $tel) {
+        // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
         self::seConnecter();
+        
+        // Vérifier que la connexion est bien établie
+        if (self::$pdoCnxBase === null) {
+            error_log("ERREUR: Connexion PDO null dans modifierClient()");
+            return false;
+        }
+        
         self::$requete = "UPDATE client 
                          SET nom = :nom, prenom = :prenom, email = :email, 
                              mdp = :mdp, date_naissance = :date_naissance,
@@ -215,7 +246,15 @@ class GestionClient extends ModelePDO {
      * @return bool True si la modification a réussi, false sinon
      */
     public static function modifierClientSansMdp($id, $nom, $prenom, $email, $date_naissance, $rue, $codePostal, $ville, $tel) {
+        // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
         self::seConnecter();
+        
+        // Vérifier que la connexion est bien établie
+        if (self::$pdoCnxBase === null) {
+            error_log("ERREUR: Connexion PDO null dans modifierClientSansMdp()");
+            return false;
+        }
+        
         self::$requete = "UPDATE client 
                          SET nom = :nom, prenom = :prenom, email = :email, 
                              date_naissance = :date_naissance,
@@ -244,7 +283,15 @@ class GestionClient extends ModelePDO {
      * @return bool True si la suppression a réussi, false sinon
      */
     public static function supprimerClient($id) {
+        // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
         self::seConnecter();
+        
+        // Vérifier que la connexion est bien établie
+        if (self::$pdoCnxBase === null) {
+            error_log("ERREUR: Connexion PDO null dans supprimerClient()");
+            return false;
+        }
+        
         self::$requete = "DELETE FROM client WHERE id = :id";
         self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
         self::$pdoStResults->bindValue(':id', $id, PDO::PARAM_INT);
