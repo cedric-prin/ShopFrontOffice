@@ -62,9 +62,20 @@ class ModelePDO {
                 
                 // Configuration SSL pour Aiven
                 if (self::$ssl_mode === 'REQUIRED' || self::$ssl_mode === 'required') {
-                    $options[PDO::MYSQL_ATTR_SSL_CA] = self::$ssl_ca ?: null;
-                    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; // Aiven utilise des certificats auto-signés
-                    // Note: PDO MySQL ne supporte pas directement ssl_mode, mais REQUIRED est implicite avec SSL_CA
+                    // Si un chemin de certificat CA est fourni, l'utiliser
+                    // Sinon, Aiven fonctionne aussi sans certificat avec SSL_VERIFY_SERVER_CERT = false
+                    if (!empty(self::$ssl_ca)) {
+                        $ssl_ca_path = self::$ssl_ca;
+                        // Si le chemin est relatif, le convertir en absolu depuis ROOT_PATH
+                        if (!file_exists($ssl_ca_path) && defined('ROOT_PATH')) {
+                            $ssl_ca_path = ROOT_PATH . $ssl_ca_path;
+                        }
+                        if (file_exists($ssl_ca_path)) {
+                            $options[PDO::MYSQL_ATTR_SSL_CA] = $ssl_ca_path;
+                        }
+                    }
+                    // Aiven utilise des certificats auto-signés, donc on désactive la vérification
+                    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
                 }
                 
                 self::$pdoCnxBase = new PDO($dsn, self::$utilisateur, self::$passe, $options);
