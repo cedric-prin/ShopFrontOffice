@@ -1,0 +1,4 @@
+# Forcer le type MIME pour les fichiers JavaScript
+AddType application/javascript .js
+Header set Content-Type "application/javascript; charset=utf-8"
+

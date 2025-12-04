@@ -1,0 +1,4 @@
+# Forcer le type MIME pour les fichiers CSS
+AddType text/css .css
+Header set Content-Type "text/css; charset=utf-8"
+
