@@ -3,24 +3,67 @@
 class ModelePDO {
 
 //Attributs utiles pour la connexion
-    protected static $serveur = Database::HOSTNAME;
-    protected static $base = Database::DATABASE;
-    protected static $utilisateur = Database::USERNAME;
-    protected static $passe = Database::PASSWORD;
+    protected static $serveur = null;
+    protected static $base = null;
+    protected static $utilisateur = null;
+    protected static $passe = null;
+    protected static $port = null;
+    protected static $ssl_mode = null;
+    protected static $ssl_ca = null;
 //Attributs utiles pour la manipulation PDO de la BD
     protected static $pdoCnxBase = null;
     protected static $pdoStResults = null;
     protected static $requete = "";
     protected static $resultat = null;
 
+    /**
+     * Initialise les paramètres de connexion depuis la classe Database
+     */
+    private static function initConfig() {
+        if (self::$serveur === null) {
+            // Utiliser les méthodes de Database qui supportent les variables d'environnement
+            self::$serveur = Database::getHostname();
+            self::$base = Database::getDatabase();
+            self::$utilisateur = Database::getUsername();
+            self::$passe = Database::getPassword();
+            self::$port = Database::getPort();
+            self::$ssl_mode = Database::getSslMode();
+            self::$ssl_ca = Database::getSslCa();
+        }
+    }
+
     public static function seConnecter() {
         if (!isset(self::$pdoCnxBase)) { //S'il n'y a pas encore eu de connexion
             try {
-                self::$pdoCnxBase = new PDO('mysql:host=' . self::$serveur . ';dbname=' . self::$base, self::$utilisateur,
-                        self::$passe);
-                self::$pdoCnxBase->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$pdoCnxBase->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-                self::$pdoCnxBase->query("SET CHARACTER SET utf8"); //méthode de la classe PDO
+                self::initConfig();
+                
+                // Construction du DSN avec le port pour Aiven
+                $dsn = 'mysql:host=' . self::$serveur . 
+                       ';port=' . self::$port . 
+                       ';dbname=' . self::$base . 
+                       ';charset=utf8mb4';
+                
+                // Options PDO pour SSL (requis pour Aiven)
+                $options = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'",
+                ];
+                
+                // Configuration SSL pour Aiven
+                if (self::$ssl_mode === 'REQUIRED' || self::$ssl_mode === 'required') {
+                    $options[PDO::MYSQL_ATTR_SSL_CA] = self::$ssl_ca ?: null;
+                    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; // Aiven utilise des certificats auto-signés
+                    // Note: PDO MySQL ne supporte pas directement ssl_mode, mais REQUIRED est implicite avec SSL_CA
+                }
+                
+                self::$pdoCnxBase = new PDO($dsn, self::$utilisateur, self::$passe, $options);
+                // Forcer l'encodage UTF-8 pour corriger les problèmes d'accents
+                self::$pdoCnxBase->exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'");
+                self::$pdoCnxBase->exec("SET CHARACTER SET 'utf8mb4'");
+                self::$pdoCnxBase->exec("SET character_set_connection = 'utf8mb4'");
+                self::$pdoCnxBase->exec("SET character_set_results = 'utf8mb4'");
+                self::$pdoCnxBase->exec("SET character_set_client = 'utf8mb4'");
             } catch (Exception $e) {
                 echo 'Erreur : ' . $e->getMessage() . '<br />'; // méthode de la classe Exception
                 echo 'Code : ' . $e->getCode(); // méthode de la classe Exception
