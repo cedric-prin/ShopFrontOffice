@@ -1,164 +1,83 @@
 <?php
-
 /**
- * Classe de configuration de la base de données
+ * Configuration de la base de données Aiven pour Render
  * 
- * Priorité de configuration :
- * 1. Variables d'environnement (pour Docker/Render/Aiven)
- * 2. Valeurs par défaut de la classe
+ * ⚠️ CRITIQUE : Ce fichier utilise UNIQUEMENT getenv() pour lire les variables d'environnement Render
+ * Aucune valeur par défaut locale (localhost, 3306, root) n'est utilisée
+ * 
+ * Variables d'environnement requises sur Render :
+ * - DB_HOST : mysql-shopfront-shopfrontoffice.b.aivencloud.com
+ * - DB_PORT : 22674
+ * - DB_DATABASE : defaultdb
+ * - DB_USERNAME : avnadmin
+ * - DB_PASSWORD : [votre mot de passe Aiven]
+ * - DB_SSL_MODE : required (en minuscule)
+ * - DB_SSL_CA : (optionnel, laisser vide)
  */
+
 class Database {
     
     /**
-     * Charge les variables d'environnement depuis le fichier .env si disponible
-     */
-    private static function loadEnv() {
-        $envFile = dirname(__DIR__) . '/.env';
-        if (file_exists($envFile)) {
-            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos(trim($line), '#') === 0) continue; // Ignorer les commentaires
-                if (strpos($line, '=') !== false) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $key = trim($key);
-                    $value = trim($value);
-                    if (!isset($_ENV[$key])) {
-                        $_ENV[$key] = $value;
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Récupère une variable d'environnement ou retourne une valeur par défaut
-     * Priorité : getenv() (pour Render) > $_ENV > .env file > default
-     */
-    private static function getEnv($key, $default) {
-        // D'abord vérifier getenv() (utilisé par Render et autres plateformes cloud)
-        $value = getenv($key);
-        if ($value !== false) {
-            return $value;
-        }
-        
-        // Ensuite vérifier $_ENV
-        if (isset($_ENV[$key])) {
-            return $_ENV[$key];
-        }
-        
-        // Enfin charger depuis .env si disponible
-        self::loadEnv();
-        if (isset($_ENV[$key])) {
-            return $_ENV[$key];
-        }
-        
-        return $default;
-    }
-    
-    // Configuration Aiven (par défaut)
-    // ⚠️ Ces valeurs sont utilisées si les variables d'environnement ne sont pas définies
-    // Sur Render, définir DB_PASSWORD dans les variables d'environnement du dashboard
-    const HOSTNAME_DEFAULT = "mysql-shopfront-shopfrontoffice.b.aivencloud.com";  // Host Aiven
-    const DATABASE_DEFAULT = "defaultdb";  // Database name Aiven
-    const USERNAME_DEFAULT = "avnadmin";  // User Aiven
-    const PASSWORD_DEFAULT = "";  // ⚠️ DOIT être défini via DB_PASSWORD dans les variables d'environnement Render
-    const PORT_DEFAULT = 22674;  // Port Aiven
-    const SSL_MODE_DEFAULT = "REQUIRED";  // SSL mode Aiven
-    
-    // Configuration pour Docker (fallback - uniquement si variables d'environnement non définies)
-    // ⚠️ Par défaut, on utilise AIVEN. Docker doit être configuré via variables d'environnement.
-    const HOSTNAME_DOCKER = "db";  // Nom du service dans docker-compose.yaml (fallback uniquement)
-    const DATABASE_DOCKER = "prin_boutique";  // Fallback uniquement
-    const USERNAME_DOCKER = "root";  // Fallback uniquement
-    const PASSWORD_DOCKER = "";  // Fallback uniquement
-    const PORT_DOCKER = 3306;  // Fallback uniquement
-    
-    /**
-     * Hostname de la base de données
-     * Priorité : DB_HOST (env) > HOSTNAME_DEFAULT > HOSTNAME_DOCKER
+     * Hostname de la base de données Aiven
+     * @return string
      */
     public static function getHostname() {
-        return self::getEnv('DB_HOST', 
-            self::getEnv('AIVEN_HOST', self::HOSTNAME_DEFAULT));
+        return getenv('DB_HOST');
     }
     
     /**
      * Nom de la base de données
+     * @return string
      */
     public static function getDatabase() {
-        return self::getEnv('DB_DATABASE', 
-            self::getEnv('AIVEN_DATABASE', self::DATABASE_DEFAULT));
+        return getenv('DB_DATABASE');
     }
     
     /**
      * Nom d'utilisateur
+     * @return string
      */
     public static function getUsername() {
-        return self::getEnv('DB_USERNAME', 
-            self::getEnv('AIVEN_USER', self::USERNAME_DEFAULT));
+        return getenv('DB_USERNAME');
     }
     
     /**
      * Mot de passe
-     * Priorité : DB_PASSWORD (env) > AIVEN_PASSWORD (env) > PASSWORD_DEFAULT (vide)
-     * ⚠️ CRITIQUE : Sur Render, définir DB_PASSWORD dans le dashboard Render
-     * Valeur à définir : voir RENDER_DB_CONFIG.md
+     * @return string
      */
     public static function getPassword() {
-        // Priorité : DB_PASSWORD (env) > AIVEN_PASSWORD (env) > PASSWORD_DEFAULT (vide)
-        $password = self::getEnv('DB_PASSWORD', 
-            self::getEnv('AIVEN_PASSWORD', self::PASSWORD_DEFAULT));
-        
-        // Si le mot de passe est vide, logger une erreur critique avec détails
-        if (empty($password)) {
-            error_log('ERREUR CRITIQUE: DB_PASSWORD non défini dans les variables d\'environnement');
-            error_log('getenv("DB_PASSWORD"): ' . (getenv('DB_PASSWORD') !== false ? 'DÉFINI' : 'NON DÉFINI'));
-            error_log('$_ENV["DB_PASSWORD"]: ' . (isset($_ENV['DB_PASSWORD']) ? 'DÉFINI' : 'NON DÉFINI'));
-            error_log('Sur Render: Dashboard > Environment > Ajouter DB_PASSWORD');
-            error_log('Valeur requise: voir RENDER_DB_CONFIG.md');
-        } else {
-            error_log('DB_PASSWORD récupéré avec succès depuis les variables d\'environnement');
-        }
-        
-        return $password;
+        return getenv('DB_PASSWORD');
     }
     
     /**
      * Port de connexion
+     * @return int|string
      */
     public static function getPort() {
-        $port = self::getEnv('DB_PORT', 
-            self::getEnv('AIVEN_PORT', self::PORT_DEFAULT));
-        return (int)$port;
+        return getenv('DB_PORT');
     }
     
     /**
-     * Mode SSL (REQUIRED pour Aiven)
+     * Mode SSL (required par défaut pour Aiven)
+     * @return string
      */
     public static function getSslMode() {
-        return self::getEnv('DB_SSL_MODE', 
-            self::getEnv('AIVEN_SSL_MODE', self::SSL_MODE_DEFAULT));
+        return getenv('DB_SSL_MODE') ?: 'required';
     }
     
     /**
      * Chemin vers le certificat CA (optionnel)
+     * @return string|null
      */
     public static function getSslCa() {
-        return self::getEnv('DB_SSL_CA', 
-            self::getEnv('AIVEN_SSL_CA', ''));
+        $ca = getenv('DB_SSL_CA');
+        return $ca ?: null;
     }
-    
-    // Constantes pour compatibilité avec l'ancien code
-    // Utilisez les méthodes get*() ci-dessus pour les nouvelles implémentations
-    const HOSTNAME = "mysql-shopfront-shopfrontoffice.b.aivencloud.com";
-    const DATABASE = "defaultdb";
-    const USERNAME = "avnadmin";
-    const PASSWORD = ""; // ⚠️ DOIT être défini via DB_PASSWORD dans les variables d'environnement
-    const PORT = 22674;
 }
 
-// Alias pour compatibilité
-class_alias('Database', 'MySqlConfig');
+// Alias pour compatibilité avec l'ancien code
+if (!class_exists('MySqlConfig')) {
+    class_alias('Database', 'MySqlConfig');
+}
 
 ?>
-

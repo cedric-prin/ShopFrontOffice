@@ -91,7 +91,9 @@ class ModelePDO {
                 ];
                 
                 // Configuration SSL pour Aiven
-                if (self::$ssl_mode === 'REQUIRED' || self::$ssl_mode === 'required') {
+                // Accepter 'required' (minuscule) ou 'REQUIRED' (majuscule)
+                $ssl_mode_lower = strtolower(self::$ssl_mode ?: 'required');
+                if ($ssl_mode_lower === 'required') {
                     // Si un chemin de certificat CA est fourni, l'utiliser
                     // Sinon, Aiven fonctionne aussi sans certificat avec SSL_VERIFY_SERVER_CERT = false
                     if (!empty(self::$ssl_ca)) {
