@@ -9,15 +9,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Active mod_rewrite pour MVC
 RUN a2enmod rewrite
 
-# Copie d'abord composer.json et composer.lock pour optimiser le cache Docker
-COPY composer.json composer.lock* /var/www/html/
-
-# Installation des dépendances Composer (avant de copier tout le code)
-WORKDIR /var/www/html
-RUN composer install --no-dev --optimize-autoloader --no-interaction || echo "Composer install failed, continuing..."
-
-# Copie du reste du code dans le container
+# Copie du code dans le container
 COPY . /var/www/html
+
+# Installation des dépendances Composer (si composer.json existe)
+WORKDIR /var/www/html
+RUN if [ -f composer.json ]; then \
+        composer install --no-dev --optimize-autoloader --no-interaction || echo "Composer install failed, but continuing..."; \
+    else \
+        echo "No composer.json found, skipping Composer install"; \
+    fi
 
 # Donne les droits
 RUN chown -R www-data:www-data /var/www/html
