@@ -17,18 +17,14 @@
     </div>
 
     <?php
-    // Inclure la classe gestionCategorie
-    require_once Chemins::MODELES . 'GestionCategorie.class.php';
-
-   
-   
- 
-   
-   
-   
-   
     // Récupérer les catégories pour les afficher
-    $categories = gestionCategorie::getLesCategories();
+    // La classe GestionCategorie est déjà chargée via bootstrap.php
+    try {
+        $categories = GestionCategorie::getLesCategories();
+    } catch (Exception $e) {
+        error_log('Erreur lors de la récupération des catégories: ' . $e->getMessage());
+        $categories = []; // Tableau vide si erreur
+    }
     ?>
 
     <div class="gestion-categorie">
