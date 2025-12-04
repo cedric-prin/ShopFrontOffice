@@ -19,7 +19,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
     <div class="alert alert-danger">La date d'expiration de la carte est invalide. Format attendu : MM/AA</div>
 <?php endif; ?>
 
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/checkout.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/checkout.css'); ?>">
 
 <div class="checkout-container">
     <div class="checkout-content">
@@ -109,7 +109,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
                             <span>PayPal et PayPal 4x sans frais</span>
                         </div>
                         <div class="payment-icons">
-                            <img src="<?php echo Chemins::IMAGES; ?>payment/paypalicon.png" alt="PayPal">
+                            <img src="<?php echo asset_path('images/payment/paypalicon.png'); ?>" alt="PayPal">
                             <span class="payment-arrow"></span>
                         </div>
                     </div>
@@ -152,7 +152,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
                             <span>Paiement en 3 ou 4 fois avec FLOA par carte bancaire</span>
                         </div>
                         <div class="payment-icons">
-                            <img src="<?php echo Chemins::IMAGES; ?>payment/floa3x4x.svg" alt="FLOA">
+                            <img src="<?php echo asset_path('images/payment/floa3x4x.svg'); ?>" alt="FLOA">
                             <span class="payment-arrow"></span>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
                             <span>Financement de 6 à 36 fois avec FLOA</span>
                         </div>
                         <div class="payment-icons">
-                            <img src="<?php echo Chemins::IMAGES; ?>payment/floa3x4x.svg" alt="FLOA">
+                            <img src="<?php echo asset_path('images/payment/floa3x4x.svg'); ?>" alt="FLOA">
                             <span class="payment-arrow"></span>
                         </div>
                     </div>
@@ -220,7 +220,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
             <?php foreach ($_SESSION['panier'] as $produit): ?>
             <div class="recap-produit">
                 <div class="produit-image">
-                    <img src="<?php echo Chemins::IMAGES_PRODUITS . $produit['image']; ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
+                    <img src="<?php echo asset_path('images/produits/generic/' . $produit['image']); ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
                 </div>
                 <div class="produit-details">
                     <h3><?php echo htmlspecialchars($produit['nom']); ?></h3>

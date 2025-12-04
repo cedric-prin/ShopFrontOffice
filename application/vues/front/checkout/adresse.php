@@ -46,7 +46,7 @@ foreach ($produits_panier as $id => $quantite) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/checkout.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/checkout.css'); ?>">
 
 <div class="checkout-container">
     <div class="checkout-content">
@@ -243,7 +243,7 @@ foreach ($produits_panier as $id => $quantite) {
             <?php foreach ($produits_details as $produit): ?>
             <div class="recap-produit">
                 <div class="produit-image">
-                    <img src="<?php echo Chemins::IMAGES_PRODUITS . $produit['image']; ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
+                    <img src="<?php echo asset_path('images/produits/generic/' . $produit['image']); ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
                 </div>
                 <div class="produit-details">
                     <h3><?php echo htmlspecialchars($produit['nom']); ?></h3>
@@ -288,4 +288,4 @@ foreach ($produits_panier as $id => $quantite) {
 </div>
 
 <!-- Ajout du script JavaScript pour la recherche de villes -->
-<script src="<?php echo Chemins::JS; ?>checkout.js"></script> 
+<script src="<?php echo asset_path('js/checkout.js'); ?>"></script> 

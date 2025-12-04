@@ -13,7 +13,7 @@ if (isset($_SESSION['panier'])) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>checkout.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/checkout.css'); ?>">
 
 <div class="confirmation-bloc">
     <h2>Merci pour votre commande !</h2>
@@ -37,7 +37,7 @@ if (isset($_SESSION['panier'])) {
             <?php if (!empty($lignesCommande)): ?>
                 <?php foreach ($lignesCommande as $ligne): ?>
                 <tr>
-                    <td><img src="<?php echo Chemins::IMAGES_PRODUITS . htmlspecialchars($ligne->image_produit ?? 'default.jpg'); ?>" alt="<?php echo htmlspecialchars($ligne->nom_produit ?? ''); ?>" style="max-width:60px;max-height:60px;"></td>
+                    <td><img src="<?php echo asset_path('images/produits/generic/' . htmlspecialchars($ligne->image_produit ?? 'default.jpg')); ?>" alt="<?php echo htmlspecialchars($ligne->nom_produit ?? ''); ?>" style="max-width:60px;max-height:60px;"></td>
                     <td><?php echo htmlspecialchars($ligne->nom_produit ?? ''); ?></td>
                     <td><?php echo $ligne->quantite ?? ''; ?></td>
                     <td><?php echo isset($ligne->prixUnitaire) ? number_format($ligne->prixUnitaire, 2, ',', ' ') : ''; ?> €</td>

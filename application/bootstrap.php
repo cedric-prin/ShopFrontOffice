@@ -314,6 +314,7 @@ switch ($controleur) {
                 $controleurAdmin->seDeconnecter();
                 break;
             case 'VoirCategorie':
+            case 'voirCategorie':
                 $controleurAdmin->VoirCategorie();
                 break;
             case 'voirStatsProduits':

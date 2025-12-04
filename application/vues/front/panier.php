@@ -28,11 +28,11 @@ if (GestionPanier::isVide()) {
             <div class='bloc-modes-paiement'>
                 <h2 class='titre-modes-paiement'>Modes de paiement Produits :</h2>
                 <div class='logos-paiement'>
-                    <img src='<?php echo Chemins::IMAGES; ?>payment/visa.png' alt='Visa'>
-                    <img src='<?php echo Chemins::IMAGES; ?>payment/mastercard.png' alt='Mastercard'>
-                    <img src='<?php echo Chemins::IMAGES; ?>payment/americanexpress.png' alt='American Express'>
-                    <img src='<?php echo Chemins::IMAGES; ?>payment/paypal.png' alt='PayPal'>
-                    <img src='<?php echo Chemins::IMAGES; ?>payment/evollis-tradein.png' alt='Evollis'>
+                    <img src='<?php echo asset_path('images/payment/visa.png'); ?>' alt='Visa'>
+                    <img src='<?php echo asset_path('images/payment/mastercard.png'); ?>' alt='Mastercard'>
+                    <img src='<?php echo asset_path('images/payment/americanexpress.png'); ?>' alt='American Express'>
+                    <img src='<?php echo asset_path('images/payment/paypal.png'); ?>' alt='PayPal'>
+                    <img src='<?php echo asset_path('images/payment/evollis-tradein.png'); ?>' alt='Evollis'>
                 </div>
                 <div class='texte-modes-paiement'>
                     Uniquement paiement par carte bancaire pour les produits non-vendus par Samsung
@@ -48,7 +48,7 @@ if (GestionPanier::isVide()) {
     $produitsPanier = GestionPanier::getProduits();
 ?>
 
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/panier.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/panier.css'); ?>">
 
 <div class="panier-container">
     <div class="panier-produits">
@@ -78,7 +78,7 @@ if (GestionPanier::isVide()) {
                 <div class="produit-item-samsung-v4" data-id="<?php echo $idProduit; ?>">
                     <button class="btn-supprimer-samsung-v4" title="Supprimer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
                     <div class="produit-img-samsung-v4">
-                        <img src="<?php echo Chemins::IMAGES_PRODUITS . $image; ?>" alt="<?php echo $nom; ?>">
+                        <img src="<?php echo asset_path('images/produits/generic/' . $image); ?>" alt="<?php echo $nom; ?>">
                     </div>
                     <div class="produit-center-samsung-v4">
                         <div class="produit-nom-samsung-v4"><?php echo $nom; ?></div>
@@ -155,15 +155,15 @@ if (GestionPanier::isVide()) {
 
         <div class="recap-avantages-samsung">
             <div class="recap-avantage">
-                <span class="recap-icone"><img src="<?php echo Chemins::IMAGES; ?>icon/icon-free-returns.png" alt="Paiement"></span>
+                <span class="recap-icone"><img src="<?php echo asset_path('images/icon/icon-free-returns.png'); ?>" alt="Paiement"></span>
                 <span>Paiement par carte bancaire en 3 ou 4 fois. <a href="#" class="recap-link">En savoir plus</a></span>
             </div>
             <div class="recap-avantage">
-                <span class="recap-icone"><img src="<?php echo Chemins::IMAGES; ?>icon/icon-free-delivery.png" alt="Livraison offerte"></span>
+                <span class="recap-icone"><img src="<?php echo asset_path('images/icon/icon-free-delivery.png'); ?>" alt="Livraison offerte"></span>
                 <span>Livraison offerte</span>
             </div>
             <div class="recap-avantage">
-                <span class="recap-icone"><img src="<?php echo Chemins::IMAGES; ?>icon/icon-change-of-mind.png" alt="Installation"></span>
+                <span class="recap-icone"><img src="<?php echo asset_path('images/icon/icon-change-of-mind.png'); ?>" alt="Installation"></span>
                 <span>Installation par nos experts</span>
             </div>
         </div>

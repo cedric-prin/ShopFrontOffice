@@ -12,7 +12,7 @@ if (!isset($_SESSION['panier'])) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/checkout.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/checkout.css'); ?>">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="checkout-container">
@@ -63,7 +63,7 @@ if (!isset($_SESSION['panier'])) {
             
             <?php foreach ($_SESSION['panier'] as $produit): ?>
             <div class="product-delivery-info">
-                <img src="<?php echo Chemins::IMAGES_PRODUITS . $produit['image']; ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>" class="product-thumbnail">
+                <img src="<?php echo asset_path('images/produits/generic/' . $produit['image']); ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>" class="product-thumbnail">
                 <div class="product-details">
                             <h4><?php echo htmlspecialchars($produit['nom']); ?></h4>
                     <p class="product-color"><?php echo htmlspecialchars($produit['libelle']); ?></p>

@@ -22,7 +22,7 @@ $total = 0;
                 $total += $sousTotal;
         ?>
             <div class="recap-produit">
-                <img src="<?php echo Chemins::IMAGES_PRODUITS . $produit['image']; ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
+                <img src="<?php echo asset_path('images/produits/generic/' . $produit['image']); ?>" alt="<?php echo htmlspecialchars($produit['nom']); ?>">
                 <div class="recap-produit-details">
                     <h3><?php echo htmlspecialchars($produit['nom']); ?></h3>
                     <p class="recap-produit-specs"><?php echo htmlspecialchars($produit['description']); ?></p>
