@@ -1,15 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="<?php echo Chemins::IMAGES; ?>favicon.svg" type="image/x-icon" />
-  <title>Sign Up | PlainAdmin Demo</title>
+  <link rel="shortcut icon" href="<?php echo asset_path('images/favicon.svg'); ?>" type="image/x-icon" />
+  <title>Connexion Admin - Prin Boutique</title>
 
-  <link rel="stylesheet" href="<?php echo Chemins::CSS; ?>vendor/bootstrap.min.css" />
-  <link rel="stylesheet" href="<?php echo Chemins::CSS; ?>vendor/lineicons.css" />
-  <link rel="stylesheet" href="<?php echo Chemins::CSS; ?>vendor/materialdesignicons.min.css" />
-  <link rel="stylesheet" href="<?php echo Chemins::CSS; ?>vendor/fullcalendar.css" />
-  <link rel="stylesheet" href="<?php echo Chemins::CSS; ?>vendor/main.css" />
+  <link rel="stylesheet" href="<?php echo asset_path('css/vendor/bootstrap.min.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo asset_path('css/vendor/lineicons.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo asset_path('css/vendor/materialdesignicons.min.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo asset_path('css/vendor/fullcalendar.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo asset_path('css/vendor/main.css'); ?>" />
 </head>
 
 <body>
@@ -85,13 +87,29 @@
       </div>
     </section>
   </main>
-  <script src="<?php echo Chemins::JS; ?>bootstrap.bundle.min.js"></script>
-  <script src="<?php echo Chemins::JS; ?>Chart.min.js"></script>
-  <script src="<?php echo Chemins::JS; ?>dynamic-pie-chart.js"></script>
-  <script src="<?php echo Chemins::JS; ?>moment.min.js"></script>
-  <script src="<?php echo Chemins::JS; ?>fullcalendar.js"></script>
-  <script src="<?php echo Chemins::JS; ?>jvectormap.min.js"></script>
-  <script src="<?php echo Chemins::JS; ?>world-merc.js"></script>
-  <script src="<?php echo Chemins::JS; ?>polyfill.js"></script>
-  <script src="<?php echo Chemins::JS; ?>main.js"></script>
+  <script src="<?php echo asset_path('js/vendor/bootstrap.bundle.min.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/Chart.min.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/pages/dynamic-pie-chart.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/moment.min.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/fullcalendar.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/jvectormap.min.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/world-merc.js'); ?>"></script>
+  <script src="<?php echo asset_path('js/vendor/polyfill.js'); ?>"></script>
+  <script>
+    // Masquer le preloader après le chargement de la page
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
+    });
+    // Fallback au cas où l'événement load ne se déclenche pas
+    setTimeout(function() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
+    }, 1000);
+  </script>
 </body>
+</html>

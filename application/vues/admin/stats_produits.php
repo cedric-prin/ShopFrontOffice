@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Statistiques Produits</title>
-    <link href="<?php echo Chemins::CSS; ?>pages/styleAdmin2.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo asset_path('css/pages/styleAdmin2.css'); ?>" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="stats-container">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Admin</title>
-    <link href="<?php echo Chemins::CSS; ?>pages/styleAdmin2.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo asset_path('css/pages/styleAdmin2.css'); ?>" rel="stylesheet" type="text/css">
 </head>
 <body>
    <!-- Conteneur principal -->
@@ -12,7 +12,7 @@
        <!-- Menu à gauche -->
        <div class="admin-menu">
            <div class="user-info">
-               <img src="<?php echo Chemins::IMAGES; ?>user.png" alt="" class="user-photo">
+               <img src="<?php echo asset_path('images/user.png'); ?>" alt="" class="user-photo">
                <span class="user-name"><?php echo $_SESSION['login_admin']; ?></span>
            </div>
            <ul>
