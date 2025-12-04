@@ -46,6 +46,12 @@ if (!function_exists('asset_path')) {
         $base = BASE_ASSET_PATH;
         $asset = ltrim($path, '/');
         
+        // Protection : s'assurer que le chemin commence bien par css/, js/, ou images/
+        // Si ce n'est pas le cas, corriger automatiquement
+        if (!preg_match('/^(css|js|images|fonts)\//', $asset)) {
+            error_log("WARNING: asset_path() reçu un chemin suspect: " . $path);
+        }
+        
         // Si BASE_ASSET_PATH est vide (Render ou racine), retourner directement le chemin
         if (empty($base)) {
             return '/' . $asset;
@@ -54,7 +60,14 @@ if (!function_exists('asset_path')) {
         // Sinon, concaténer avec un slash
         // S'assurer qu'il n'y a pas de double slash
         $base = rtrim($base, '/');
-        return $base . '/' . $asset;
+        $result = $base . '/' . $asset;
+        
+        // Debug : logger les chemins générés en production pour diagnostic
+        if (defined('APP_ENV') && APP_ENV === 'production') {
+            error_log("asset_path('$path') = '$result'");
+        }
+        
+        return $result;
     }
 }
 
