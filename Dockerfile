@@ -12,14 +12,24 @@ RUN a2enmod rewrite headers
 # Copie du code dans le container
 COPY . /var/www/html
 
-# Vérification que les fichiers statiques sont bien copiés (pour debug)
-RUN echo "=== Vérification CSS ===" && \
-    ls -la /var/www/html/public/css/vendor/ 2>&1 || echo "CSS vendor directory not found" && \
-    echo "=== Vérification JS ===" && \
-    ls -la /var/www/html/public/js/vendor/ 2>&1 || echo "JS vendor directory not found" && \
-    echo "=== Vérification fichiers spécifiques ===" && \
-    test -f /var/www/html/public/css/vendor/bootstrap.min.css && echo "bootstrap.min.css OK" || echo "bootstrap.min.css MISSING" && \
-    test -f /var/www/html/public/js/vendor/bootstrap.bundle.min.js && echo "bootstrap.bundle.min.js OK" || echo "bootstrap.bundle.min.js MISSING"
+# Vérification CRITIQUE que les fichiers statiques sont bien copiés
+RUN echo "=== VÉRIFICATION CSS ===" && \
+    if [ -d /var/www/html/public/css/vendor ]; then \
+        echo "Répertoire CSS vendor trouvé:" && \
+        ls -lah /var/www/html/public/css/vendor/ | head -10; \
+    else \
+        echo "ERREUR: Répertoire CSS vendor NON TROUVÉ"; \
+    fi && \
+    echo "=== VÉRIFICATION JS ===" && \
+    if [ -d /var/www/html/public/js/vendor ]; then \
+        echo "Répertoire JS vendor trouvé:" && \
+        ls -lah /var/www/html/public/js/vendor/ | head -10; \
+    else \
+        echo "ERREUR: Répertoire JS vendor NON TROUVÉ"; \
+    fi && \
+    echo "=== VÉRIFICATION FICHIERS SPÉCIFIQUES ===" && \
+    test -f /var/www/html/public/css/vendor/bootstrap.min.css && echo "✓ bootstrap.min.css OK" || echo "✗ bootstrap.min.css MANQUANT" && \
+    test -f /var/www/html/public/js/vendor/bootstrap.bundle.min.js && echo "✓ bootstrap.bundle.min.js OK" || echo "✗ bootstrap.bundle.min.js MANQUANT"
 
 # Installation des dépendances Composer (si composer.json existe)
 WORKDIR /var/www/html

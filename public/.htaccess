@@ -1,21 +1,20 @@
 Options -Indexes
 RewriteEngine On
 
-# RÈGLE 1: Si le fichier existe physiquement, le servir DIRECTEMENT (pas de réécriture)
-# Cette règle doit être en PREMIER pour servir les fichiers existants
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^(.*)$ - [L]
-
-# RÈGLE 2: Si c'est un répertoire qui existe, le servir DIRECTEMENT
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^(.*)$ - [L]
-
-# RÈGLE 3: Exclure TOUS les fichiers statiques par extension
-# Même si le fichier n'existe pas, ne PAS réécrire vers index.php (retourner 404 naturellement)
+# DÉSACTIVER le rewriting pour les fichiers statiques AVANT TOUT
+# Cette règle doit être absolument la première
 RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|eot|map|pdf|zip|txt|json|xml)$ [NC]
 RewriteRule ^(.*)$ - [L]
 
-# RÈGLE 4: Redirige UNIQUEMENT le reste (qui n'est pas un fichier statique) vers index.php
+# Si le fichier existe physiquement, le servir DIRECTEMENT
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(.*)$ - [L]
+
+# Si c'est un répertoire qui existe, le servir DIRECTEMENT
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*)$ - [L]
+
+# Redirige le reste vers index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
