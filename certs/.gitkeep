@@ -1,0 +1,4 @@
+# Ce dossier contient le certificat SSL CA Aiven
+# Créez un fichier ca.pem ici avec le contenu du certificat Aiven
+# Le fichier ca.pem est dans .gitignore pour des raisons de sécurité
+

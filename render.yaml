@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: prin-boutique
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DB_HOST
+        value: mysql-shopfront-shopfrontoffice.b.aivencloud.com
+      - key: DB_PORT
+        value: 22674
+      - key: DB_DATABASE
+        value: defaultdb
+      - key: DB_USERNAME
+        value: avnadmin
+      - key: DB_PASSWORD
+        sync: false  # ⚠️ À définir manuellement dans le dashboard Render avec votre mot de passe Aiven
+      - key: DB_SSL_MODE
+        value: REQUIRED
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false

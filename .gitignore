@@ -19,6 +19,11 @@ logs/*
 .env
 .env.local
 
+# Certificats SSL (sécurité)
+certs/ca.pem
+*.pem
+!config/ssl/.gitkeep
+
 # Tests
 coverage/
 .phpunit.result.cache

@@ -64,12 +64,13 @@ class Database {
     const PORT_DEFAULT = 22674;  // Port Aiven
     const SSL_MODE_DEFAULT = "REQUIRED";  // SSL mode Aiven
     
-    // Configuration pour Docker (fallback)
-    const HOSTNAME_DOCKER = "db";  // Nom du service dans docker-compose.yaml
-    const DATABASE_DOCKER = "prin_boutique";
-    const USERNAME_DOCKER = "root";
-    const PASSWORD_DOCKER = "";
-    const PORT_DOCKER = 3306;
+    // Configuration pour Docker (fallback - uniquement si variables d'environnement non définies)
+    // ⚠️ Par défaut, on utilise AIVEN. Docker doit être configuré via variables d'environnement.
+    const HOSTNAME_DOCKER = "db";  // Nom du service dans docker-compose.yaml (fallback uniquement)
+    const DATABASE_DOCKER = "prin_boutique";  // Fallback uniquement
+    const USERNAME_DOCKER = "root";  // Fallback uniquement
+    const PASSWORD_DOCKER = "";  // Fallback uniquement
+    const PORT_DOCKER = 3306;  // Fallback uniquement
     
     /**
      * Hostname de la base de données
