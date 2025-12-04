@@ -39,7 +39,7 @@
                                     $libelle = htmlspecialchars($categorie->libelle);
                                     $lienCategorie = str_replace(' ', '_', $libelle);
                                 ?>
-                                    <a href="index.php?controleur=Produits&action=afficher&categorie=<?php echo $lienCategorie; ?>"><?php echo $libelle; ?></a>
+                                    <a href="<?php echo asset_path('index.php'); ?>?controleur=Produits&action=afficher&categorie=<?php echo rawurlencode($lienCategorie); ?>"><?php echo $libelle; ?></a>
                                 <?php endforeach; ?>
                             </div>
                         </div>

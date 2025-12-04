@@ -16,9 +16,14 @@ session_start(); // Pour éviter erreurs SESSIONS
 define('ROOT_PATH', dirname(__DIR__) . '/');
 
 // Calculer le chemin de base pour les assets (CSS, JS, images)
-// Fonctionne avec localhost/prin_boutique/public/ ou localhost:8000
+// Fonctionne avec localhost/prin_boutique/public/ ou localhost:8000 ou Render
 $script_name = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
 $script_dir = dirname($script_name);
+
+// Détecter si on est sur Render (pas de sous-dossier dans SCRIPT_NAME)
+// Sur Render, le DocumentRoot pointe vers /var/www/html/public, donc SCRIPT_NAME = /index.php
+// En localhost avec WAMP, SCRIPT_NAME = /prin_boutique/public/index.php
+$is_render = (strpos($script_name, '/public/') === false && $script_dir === '/');
 
 // Si on est dans un sous-dossier (ex: /prin_boutique/public/), garder le chemin complet
 // Si on est à la racine (ex: /), utiliser le chemin vide
@@ -40,7 +45,7 @@ if (!function_exists('asset_path')) {
         $base = BASE_ASSET_PATH;
         $asset = ltrim($path, '/');
         
-        // Si BASE_ASSET_PATH est vide, retourner directement le chemin
+        // Si BASE_ASSET_PATH est vide (Render ou racine), retourner directement le chemin
         if (empty($base)) {
             return '/' . $asset;
         }
