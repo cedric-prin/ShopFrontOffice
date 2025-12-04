@@ -115,7 +115,7 @@ $currentContent = isset($heroContent[$categorieLibelle]) ? $heroContent[$categor
                     <article class="product-card-samsung">
                         <div class="product-image-container-samsung">
                             <img 
-                                src="<?php echo Chemins::IMAGES_PRODUITS . $unProduit->image; ?>" 
+                                src="<?php echo asset_path('images/produits/generic/' . $unProduit->image); ?>" 
                                 alt="<?php echo htmlspecialchars($unProduit->nom); ?>" 
                                 class="product-image-samsung"
                                 loading="lazy"
