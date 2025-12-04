@@ -28,8 +28,13 @@
                             <a href="#" class="dropdown-toggle">Catégories <i class="fas fa-chevron-down"></i></a>
                             <div class="dropdown-menu">
                                 <?php 
-                                // Récupérer les catégories depuis la base de données
-                                $categories = GestionBoutique::getLesCategories();
+                                // Récupérer les catégories depuis la base de données (avec gestion d'erreur)
+                                try {
+                                    $categories = GestionBoutique::getLesCategories();
+                                } catch (Exception $e) {
+                                    error_log('Erreur lors de la récupération des catégories: ' . $e->getMessage());
+                                    $categories = []; // Tableau vide si erreur
+                                }
                                 foreach ($categories as $categorie): 
                                     $libelle = htmlspecialchars($categorie->libelle);
                                     $lienCategorie = str_replace(' ', '_', $libelle);
