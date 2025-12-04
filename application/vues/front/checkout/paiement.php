@@ -67,7 +67,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'date'): ?>
                             <span>Carte bancaire</span>
                         </div>
                         <div class="payment-icons">
-                            <img src="<?php echo Chemins::IMAGES; ?>payment/carte.png" alt="Carte bancaire">
+                            <img src="<?php echo asset_path('images/payment/carte.png'); ?>" alt="Carte bancaire">
                             <span class="payment-arrow"></span>
                         </div>
                     </div>
