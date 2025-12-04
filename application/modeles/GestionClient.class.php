@@ -10,29 +10,13 @@ class GestionClient extends ModelePDO {
 
     /**
      * Se connecter à la base de données
+     * Utilise la connexion centralisée ModelePDO avec configuration Aiven
      */
     public static function seConnecter() {
-        try {
-            error_log("Tentative de connexion à la base de données", 0);
-            if (!isset(self::$pdoCnxBase)) {
-                $dsn = 'mysql:host=localhost;dbname=prin_boutique';
-                $user = 'root';
-                $password = '';
-                
-                error_log("Configuration de la connexion - DSN: $dsn, User: $user", 0);
-                
-                self::$pdoCnxBase = new PDO($dsn, $user, $password);
-                self::$pdoCnxBase->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$pdoCnxBase->exec("SET CHARACTER SET utf8");
-                
-                error_log("Connexion à la base de données établie avec succès", 0);
-            } else {
-                error_log("Connexion à la base de données déjà établie", 0);
-            }
-        } catch (PDOException $e) {
-            error_log("Erreur de connexion à la base de données : " . $e->getMessage(), 0);
-            throw new Exception("Erreur de connexion à la base de données : " . $e->getMessage());
-        }
+        // Utiliser la méthode parente qui gère la connexion Aiven
+        parent::seConnecter();
+        // Récupérer la connexion PDO partagée
+        self::$pdoCnxBase = parent::getPDO();
     }
 
     /**
