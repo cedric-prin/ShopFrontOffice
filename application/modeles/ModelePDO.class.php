@@ -255,8 +255,24 @@ class ModelePDO {
             return false;
     }
     
+    /**
+     * Récupère la connexion PDO Aiven
+     * ⚠️ NE JAMAIS créer de connexion directe - TOUJOURS utiliser cette méthode
+     * @return PDO|null La connexion PDO ou null si la connexion a échoué
+     */
     public static function getPDO() {
         self::seConnecter();
+        
+        // Vérifier que la connexion est bien établie
+        if (self::$pdoCnxBase === null) {
+            error_log('ERREUR CRITIQUE: Connexion PDO null dans getPDO()');
+            error_log('Vérifiez que DB_PASSWORD est défini dans les variables d\'environnement Render');
+            error_log('Host: ' . (self::$serveur ?: 'NON DÉFINI'));
+            error_log('Database: ' . (self::$base ?: 'NON DÉFINI'));
+            error_log('User: ' . (self::$utilisateur ?: 'NON DÉFINI'));
+            error_log('Password: ' . (self::$passe ? 'DÉFINI' : 'VIDE - ⚠️ PROBLÈME'));
+        }
+        
         return self::$pdoCnxBase;
     }
 }
