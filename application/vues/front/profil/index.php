@@ -2,14 +2,14 @@
      Fichier : v_profil_client.inc.php
      Rôle    : Vue affichant le profil du client connecté (informations personnelles, sécurité, adresse, nombre de commandes, etc.)
      ----------------------------------------------------------------------------- -->
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/profil.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/profil.css'); ?>">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <div class="profil-container">
     <!-- En-tête du profil avec photo, nom et email -->
     <div class="profil-header">
         <div class="profil-photo">
-            <img src="<?php echo Chemins::IMAGES; ?>default-avatar.png" alt="Photo de profil">
+            <img src="<?php echo asset_path('images/default-avatar.png'); ?>" alt="Photo de profil">
         </div>
         <h1><?php echo !empty($client->prenom) && !empty($client->nom) ? htmlspecialchars($client->prenom . ' ' . $client->nom) : 'Utilisateur'; ?></h1>
         <p><?php echo !empty($client->email) ? htmlspecialchars($client->email) : 'Email non renseigné'; ?></p>

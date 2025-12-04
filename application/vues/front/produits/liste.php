@@ -2,7 +2,7 @@
      Fichier : v_produits.inc.php
      Rôle    : Vue affichant la liste des produits disponibles à la vente.
      ----------------------------------------------------------------------------- -->
-<link rel="stylesheet" href="<?php echo Chemins::CSS; ?>pages/produits-modern.css">
+<link rel="stylesheet" href="<?php echo asset_path('css/pages/produits-modern.css'); ?>">
 
 <!-- Section Hero Accueil -->
 <?php
