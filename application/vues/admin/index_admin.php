@@ -18,10 +18,10 @@
            <ul>
                    
                
-               <li><a href="index.php?controleur=Admin&action=VoirCategorie&display=minimal" >Gestion Catégorie</a></li>
+               <li><a href="<?php echo (BASE_ASSET_PATH ? BASE_ASSET_PATH . '/' : '') . 'index.php?controleur=Admin&action=VoirCategorie&display=minimal'; ?>" >Gestion Catégorie</a></li>
                <li><a href="#" >Gestion Client</a></li>
                <li><a href="#" >Gestion Produit</a></li>
-               <li><a href="index.php?controleur=Admin&action=voirStatsProduits">Statistiques Produits</a></li>
+               <li><a href="<?php echo (BASE_ASSET_PATH ? BASE_ASSET_PATH . '/' : '') . 'index.php?controleur=Admin&action=voirStatsProduits'; ?>">Statistiques Produits</a></li>
            </ul>
        </div>
        
@@ -35,7 +35,7 @@
 
     <!-- Bouton de déconnexion séparé du menu, positionné en bas à gauche -->
     <div class="logout-container">
-        <a href="index.php?controleur=Admin&action=seDeconnecter" class="btn-deconnexion">Se déconnecter (<?php echo $_SESSION['login_admin'] ?>)</a>
+        <a href="<?php echo (BASE_ASSET_PATH ? BASE_ASSET_PATH . '/' : '') . 'index.php?controleur=Admin&action=seDeconnecter'; ?>" class="btn-deconnexion">Se déconnecter (<?php echo $_SESSION['login_admin'] ?>)</a>
     </div>
 
      <!-- Script JavaScript -->
