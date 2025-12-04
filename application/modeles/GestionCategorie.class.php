@@ -11,12 +11,59 @@ class GestionCategorie extends ModelePDO {
      */
     public static function getLesCategories() {
         self::seConnecter();
-        self::$requete = "SELECT * FROM categorie";
-        self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
-        self::$pdoStResults->execute();
-        self::$resultat = self::$pdoStResults->fetchAll(PDO::FETCH_OBJ);
-        self::$pdoStResults->closeCursor();
-        return self::$resultat;
+        
+        // Vérifier que la connexion est établie
+        if (self::$pdoCnxBase === null) {
+            error_log('ERREUR: Connexion PDO non établie dans getLesCategories()');
+            return []; // Retourner un tableau vide au lieu de générer une erreur fatale
+        }
+        
+        try {
+            self::$requete = "SELECT * FROM categorie ORDER BY libelle";
+            self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
+            self::$pdoStResults->execute();
+            self::$resultat = self::$pdoStResults->fetchAll(PDO::FETCH_OBJ);
+            self::$pdoStResults->closeCursor();
+            
+            // Corriger le double encodage UTF-8 si nécessaire
+            foreach (self::$resultat as $categorie) {
+                if (isset($categorie->libelle)) {
+                    $libelle = $categorie->libelle;
+                    
+                    // Détecter si c'est un double encodage (contient des séquences comme ├«, ├¿, ├®)
+                    if (preg_match('/├[«¿®]/u', $libelle)) {
+                        // Méthode 1 : Double conversion mb_convert_encoding
+                        $libelle_corrige = mb_convert_encoding($libelle, 'ISO-8859-1', 'UTF-8');
+                        $libelle_corrige = mb_convert_encoding($libelle_corrige, 'UTF-8', 'ISO-8859-1');
+                        
+                        // Si ça ne marche pas, essayer iconv
+                        if (preg_match('/├[«¿®]/u', $libelle_corrige)) {
+                            $libelle_corrige = @iconv('UTF-8', 'ISO-8859-1//IGNORE', $libelle);
+                            $libelle_corrige = @iconv('ISO-8859-1', 'UTF-8//IGNORE', $libelle_corrige);
+                        }
+                        
+                        // Si toujours corrompu, utiliser un mapping manuel
+                        if (preg_match('/├[«¿®]/u', $libelle_corrige)) {
+                            $mapping = [
+                                'Bo├«tier' => 'Boîtier',
+                                'Carte m├¿re' => 'Carte mère',
+                                'M├®moire' => 'Mémoire',
+                            ];
+                            if (isset($mapping[$libelle])) {
+                                $libelle_corrige = $mapping[$libelle];
+                            }
+                        }
+                        
+                        $categorie->libelle = $libelle_corrige;
+                    }
+                }
+            }
+            
+            return self::$resultat;
+        } catch (Exception $e) {
+            error_log('ERREUR dans getLesCategories(): ' . $e->getMessage());
+            return []; // Retourner un tableau vide en cas d'erreur
+        }
     }
 
     /**

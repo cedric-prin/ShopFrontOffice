@@ -5,13 +5,10 @@
         <title>Prin Boutique</title>
         <meta http-equiv="Content-Language" content="fr">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link href="<?php echo Chemins::CSS . 'style.css'; ?>" rel="stylesheet"
+        <link href="<?php echo asset_path('css/style.css'); ?>" rel="stylesheet"
               type="text/css">
-        <link href="<?php echo Chemins::CSS . "components/styleform.css"; ?>" rel="stylesheet" type="text/css">
-        <link rel="shortcut icon" type="image/jpeg" href="<?php
-        echo Chemins::IMAGES .
-        'global/Logo_court.jpg';
-        ?>">
+        <link href="<?php echo asset_path('css/components/styleform.css'); ?>" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" type="image/jpeg" href="<?php echo asset_path('images/global/Logo_court.jpg'); ?>">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -22,7 +19,7 @@
             <div class="header-inner">
                 <div class="header-left">
                     <div class="header-logo">
-                        <a href="index.php"><img src="<?php echo Chemins::IMAGES . 'global/Logo_long.jpg'; ?>"
+                        <a href="index.php"><img src="<?php echo asset_path('images/global/Logo_long.jpg'); ?>"
                                          alt="Prin Boutique" title="Revenir à l'accueil"/></a>
                     </div>
                     <nav class="header-menu">
