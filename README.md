@@ -106,6 +106,57 @@ docker-compose up --build
 #### 👤 Client
 - Créer un compte via l'interface
 
+## 🌐 Déploiement sur Render
+
+### 🚀 Déploiement avec Aiven MySQL
+
+L'application est configurée pour être déployée sur **Render** avec une base de données **Aiven MySQL**.
+
+### 📋 Configuration requise sur Render
+
+Pour que l'application fonctionne sur Render, vous devez définir les variables d'environnement suivantes dans le dashboard Render :
+
+1. Allez sur https://dashboard.render.com
+2. Sélectionnez votre service web
+3. Allez dans l'onglet **Environment**
+4. Cliquez sur **Add Environment Variable** pour chaque variable
+
+#### ✅ Variables d'environnement complètes
+
+| Key | Value | Description |
+|-----|-------|-------------|
+| `DB_HOST` | `mysql-shopfront-shopfrontoffice.b.aivencloud.com` | Host Aiven |
+| `DB_PORT` | `22674` | Port Aiven |
+| `DB_DATABASE` | `defaultdb` | Nom de la base de données |
+| `DB_USERNAME` | `avnadmin` | Utilisateur Aiven |
+| `DB_PASSWORD` | `[Votre mot de passe Aiven]` | ⚠️ Mot de passe Aiven (voir votre dashboard Aiven) |
+| `DB_SSL_MODE` | `required` | ⚠️ **EN MINUSCULE** (pas REQUIRED) |
+| `DB_SSL_CA` | *(laisser vide)* | Optionnel |
+
+### ⚠️ Points critiques
+
+1. **DB_SSL_MODE doit être en minuscule** : `required` (pas `REQUIRED` ou `Required`)
+2. **DB_PASSWORD** : Récupérez-le depuis votre dashboard Aiven
+3. **DB_SSL_CA** : Laisser vide (optionnel)
+
+### 🔍 Vérification
+
+Après avoir défini les variables :
+1. Cliquez sur **Save Changes**
+2. Render redéploiera automatiquement votre service
+3. Vérifiez les logs Render pour confirmer que la connexion fonctionne
+4. Testez l'inscription client
+
+### 🗄️ Base de données Aiven
+
+La base de données utilise **Aiven MySQL** avec :
+- ✅ Connexion SSL sécurisée
+- ✅ Configuration via variables d'environnement
+- ✅ Support des migrations SQL
+- ✅ Triggers et procédures stockées
+
+Le fichier `config/database.php` utilise `getenv()` pour lire les variables d'environnement Render, garantissant que Render utilise toujours les variables définies dans le dashboard.
+
 ## 📸 Captures d'écran
 
 ### 🏠 Interface Client
