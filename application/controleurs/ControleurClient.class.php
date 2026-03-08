@@ -146,9 +146,9 @@ class ControleurClient {
                     
                     error_log("Connexion réussie - Redirection vers l'accueil");
                     
-                    // Rediriger vers la page d'accueil
-                    header('Location: index.php');
-                    return;
+                    // Rediriger vers la page d'accueil du site (hors /client)
+                    header('Location: /index.php');
+                    exit;
                 } else {
                     error_log("Échec de la connexion - Identifiants incorrects");
                     header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&error=connexion');
