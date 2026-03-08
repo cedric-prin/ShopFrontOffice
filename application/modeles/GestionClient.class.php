@@ -41,7 +41,7 @@ class GestionClient extends ModelePDO {
      * @param string $date_naissance La date de naissance du client
      * @return bool True si la création a réussi, false sinon
      */
-    public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance, $rue, $codePostal, $ville, $tel) {
+    public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance) {
         try {
             error_log("=== GestionClient::creerClient() - DÉBUT ===");
             error_log("Données: nom=$nom, prenom=$prenom, email=$email");
@@ -50,8 +50,7 @@ class GestionClient extends ModelePDO {
                 error_log("ERREUR CRITIQUE: Connexion PDO null après seConnecter()");
                 throw new PDOException("Connexion à la base de données Aiven échouée - PDO null");
             }
-            self::$requete = "INSERT INTO client (nom, prenom, email, mdp, date_naissance) \
-                             VALUES (:nom, :prenom, :email, :mdp, :date_naissance)";
+            self::$requete = "INSERT INTO client (nom, prenom, email, mdp, date_naissance) VALUES (:nom, :prenom, :email, :mdp, :date_naissance)";
             self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
             self::$pdoStResults->bindValue(':nom', $nom, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':prenom', $prenom, PDO::PARAM_STR);
