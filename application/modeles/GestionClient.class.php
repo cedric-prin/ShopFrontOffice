@@ -41,7 +41,7 @@ class GestionClient extends ModelePDO {
      * @param string $date_naissance La date de naissance du client
      * @return bool True si la création a réussi, false sinon
      */
-    public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance) {
+    public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance, $rue, $codePostal, $ville, $tel) {
         try {
             error_log("=== GestionClient::creerClient() - DÉBUT ===");
             error_log("Données: nom=$nom, prenom=$prenom, email=$email, rue=$rue, cp=$codePostal, ville=$ville, tel=$tel");
