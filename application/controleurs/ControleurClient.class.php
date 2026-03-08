@@ -31,26 +31,27 @@ class ControleurClient {
                 $prenom = filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
                 $mdp = filter_input(INPUT_POST, 'mdp');
-                
+                $rue = filter_input(INPUT_POST, 'rue', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $codePostal = filter_input(INPUT_POST, 'codePostal', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $ville = filter_input(INPUT_POST, 'ville', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $tel = filter_input(INPUT_POST, 'tel', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
                 // Récupérer les composants de la date
                 $jour = filter_input(INPUT_POST, 'jour', FILTER_SANITIZE_NUMBER_INT);
                 $mois = filter_input(INPUT_POST, 'mois', FILTER_SANITIZE_NUMBER_INT);
                 $annee = filter_input(INPUT_POST, 'annee', FILTER_SANITIZE_NUMBER_INT);
-                
+
                 // Debug des données reçues
-                error_log("Données reçues - Nom: $nom, Prénom: $prenom, Email: $email");
+                error_log("Données reçues - Nom: $nom, Prénom: $prenom, Email: $email, Rue: $rue, CP: $codePostal, Ville: $ville, Tel: $tel");
                 error_log("Date - Jour: $jour, Mois: $mois, Année: $annee");
-                
+
                 // Formater la date de naissance
                 $date_naissance = $annee . '-' . str_pad($mois, 2, '0', STR_PAD_LEFT) . '-' . str_pad($jour, 2, '0', STR_PAD_LEFT);
                 error_log("Date formatée: $date_naissance");
 
                 // Validation des données
-                if ($nom && $prenom && $email && $mdp && $jour && $mois && $annee) {
+                if ($nom && $prenom && $email && $mdp && $rue && $codePostal && $ville && $tel && $jour && $mois && $annee) {
                     error_log("Validation OK - Vérification email existant...");
-                    
-                    // ⚠️ CRITIQUE : Utiliser UNIQUEMENT GestionClient (qui utilise ModelePDO::getPDO())
-                    // Aucune connexion directe dans le contrôleur
                     $client_existant = GestionClient::getClientParEmail($email);
                     if ($client_existant) {
                         error_log("Email déjà existant: $email");
@@ -59,10 +60,7 @@ class ControleurClient {
                     }
 
                     error_log("Email disponible - Création du client via GestionClient::creerClient()");
-                    
-                    // ⚠️ CRITIQUE : Utiliser UNIQUEMENT GestionClient::creerClient()
-                    // Cette méthode utilise ModelePDO::getPDO() pour la connexion Aiven
-                    if (GestionClient::creerClient($nom, $prenom, $email, $mdp, $date_naissance)) {
+                    if (GestionClient::creerClient($nom, $prenom, $email, $mdp, $date_naissance, $rue, $codePostal, $ville, $tel)) {
                         error_log("Client créé avec succès - Redirection vers connexion");
                         header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&inscription=success');
                         return;
@@ -71,7 +69,7 @@ class ControleurClient {
                         throw new Exception("Erreur lors de la création du client dans la base de données");
                     }
                 } else {
-                    error_log("Données manquantes - Nom: $nom, Prénom: $prenom, Email: $email, Jour: $jour, Mois: $mois, Année: $annee");
+                    error_log("Données manquantes - Nom: $nom, Prénom: $prenom, Email: $email, Rue: $rue, CP: $codePostal, Ville: $ville, Tel: $tel, Jour: $jour, Mois: $mois, Année: $annee");
                     header('Location: index.php?controleur=Client&action=afficherInscription&display=minimal&error=champs');
                     return;
                 }

@@ -44,43 +44,31 @@ class GestionClient extends ModelePDO {
     public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance) {
         try {
             error_log("=== GestionClient::creerClient() - DÉBUT ===");
-            error_log("Données: nom=$nom, prenom=$prenom, email=$email");
-            
-            // ⚠️ CRITIQUE : Utiliser UNIQUEMENT ModelePDO::getPDO() via seConnecter()
-            // seConnecter() appelle ModelePDO::getPDO() qui garantit la connexion Aiven
+            error_log("Données: nom=$nom, prenom=$prenom, email=$email, rue=$rue, cp=$codePostal, ville=$ville, tel=$tel");
             self::seConnecter();
-            
-            // Double vérification que la connexion est bien établie
             if (self::$pdoCnxBase === null) {
                 error_log("ERREUR CRITIQUE: Connexion PDO null après seConnecter()");
-                error_log("ModelePDO::getPDO() a retourné null - Vérifiez les variables d'environnement Render");
                 throw new PDOException("Connexion à la base de données Aiven échouée - PDO null");
             }
-            
-            error_log("Connexion Aiven établie - PDO prêt pour les requêtes");
-            self::$requete = "INSERT INTO client (nom, prenom, email, mdp, date_naissance) 
-                             VALUES (:nom, :prenom, :email, :mdp, :date_naissance)";
-            
-            error_log("Préparation de la requête SQL", 0);
+            self::$requete = "INSERT INTO client (nom, prenom, rue, codePostal, ville, tel, email, mdp, date_naissance) 
+                             VALUES (:nom, :prenom, :rue, :codePostal, :ville, :tel, :email, :mdp, :date_naissance)";
             self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
-            
-            error_log("Liaison des paramètres", 0);
             self::$pdoStResults->bindValue(':nom', $nom, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':prenom', $prenom, PDO::PARAM_STR);
+            self::$pdoStResults->bindValue(':rue', $rue, PDO::PARAM_STR);
+            self::$pdoStResults->bindValue(':codePostal', $codePostal, PDO::PARAM_STR);
+            self::$pdoStResults->bindValue(':ville', $ville, PDO::PARAM_STR);
+            self::$pdoStResults->bindValue(':tel', $tel, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':email', $email, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':mdp', password_hash($mot_de_passe, PASSWORD_DEFAULT), PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':date_naissance', $date_naissance, PDO::PARAM_STR);
-            
-            error_log("Exécution de la requête", 0);
             $resultat = self::$pdoStResults->execute();
-            
             if ($resultat) {
                 error_log("Client créé avec succès dans la base de données", 0);
             } else {
                 error_log("Échec de la création du client dans la base de données", 0);
                 error_log("Erreur PDO : " . implode(" ", self::$pdoStResults->errorInfo()), 0);
             }
-            
             self::$pdoStResults->closeCursor();
             return $resultat;
         } catch (PDOException $e) {
