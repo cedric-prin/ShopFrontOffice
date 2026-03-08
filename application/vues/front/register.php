@@ -37,33 +37,6 @@ if (isset($_GET['error'])) {
 
         <form class="auth-form" action="/client/traiterInscription" method="post">
                 <div class="form-group">
-                        <div class="form-group">
-                            <input type="text" id="rue" name="rue" class="form-control" required>
-                            <label for="rue">Adresse (rue)</label>
-                            <p class="error-message" id="rue-error">Veuillez saisir votre adresse</p>
-                            <p class="error-message" id="rue-empty">Veuillez remplir ce champ</p>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" id="codePostal" name="codePostal" class="form-control" required pattern="[0-9]{4,5}">
-                            <label for="codePostal">Code postal</label>
-                            <p class="error-message" id="codePostal-error">Veuillez saisir un code postal valide</p>
-                            <p class="error-message" id="codePostal-empty">Veuillez remplir ce champ</p>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" id="ville" name="ville" class="form-control" required>
-                            <label for="ville">Ville</label>
-                            <p class="error-message" id="ville-error">Veuillez saisir votre ville</p>
-                            <p class="error-message" id="ville-empty">Veuillez remplir ce champ</p>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" id="tel" name="tel" class="form-control" required pattern="[0-9]{10}">
-                            <label for="tel">Téléphone</label>
-                            <p class="error-message" id="tel-error">Veuillez saisir un numéro de téléphone valide (10 chiffres)</p>
-                            <p class="error-message" id="tel-empty">Veuillez remplir ce champ</p>
-                        </div>
                 <input type="email" id="email" name="email" class="form-control" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     <label for="email">E-mail</label>
                 <p class="error-message" id="email-error">L'adresse e-mail n'est pas valide.</p>

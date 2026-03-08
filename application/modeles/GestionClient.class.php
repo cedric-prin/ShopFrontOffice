@@ -44,21 +44,17 @@ class GestionClient extends ModelePDO {
     public static function creerClient($nom, $prenom, $email, $mot_de_passe, $date_naissance, $rue, $codePostal, $ville, $tel) {
         try {
             error_log("=== GestionClient::creerClient() - DÉBUT ===");
-            error_log("Données: nom=$nom, prenom=$prenom, email=$email, rue=$rue, cp=$codePostal, ville=$ville, tel=$tel");
+            error_log("Données: nom=$nom, prenom=$prenom, email=$email");
             self::seConnecter();
             if (self::$pdoCnxBase === null) {
                 error_log("ERREUR CRITIQUE: Connexion PDO null après seConnecter()");
                 throw new PDOException("Connexion à la base de données Aiven échouée - PDO null");
             }
-            self::$requete = "INSERT INTO client (nom, prenom, rue, codePostal, ville, tel, email, mdp, date_naissance) 
-                             VALUES (:nom, :prenom, :rue, :codePostal, :ville, :tel, :email, :mdp, :date_naissance)";
+            self::$requete = "INSERT INTO client (nom, prenom, email, mdp, date_naissance) \
+                             VALUES (:nom, :prenom, :email, :mdp, :date_naissance)";
             self::$pdoStResults = self::$pdoCnxBase->prepare(self::$requete);
             self::$pdoStResults->bindValue(':nom', $nom, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':prenom', $prenom, PDO::PARAM_STR);
-            self::$pdoStResults->bindValue(':rue', $rue, PDO::PARAM_STR);
-            self::$pdoStResults->bindValue(':codePostal', $codePostal, PDO::PARAM_STR);
-            self::$pdoStResults->bindValue(':ville', $ville, PDO::PARAM_STR);
-            self::$pdoStResults->bindValue(':tel', $tel, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':email', $email, PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':mdp', password_hash($mot_de_passe, PASSWORD_DEFAULT), PDO::PARAM_STR);
             self::$pdoStResults->bindValue(':date_naissance', $date_naissance, PDO::PARAM_STR);

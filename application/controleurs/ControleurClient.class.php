@@ -31,10 +31,6 @@ class ControleurClient {
                 $prenom = filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
                 $mdp = filter_input(INPUT_POST, 'mdp');
-                $rue = filter_input(INPUT_POST, 'rue', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $codePostal = filter_input(INPUT_POST, 'codePostal', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $ville = filter_input(INPUT_POST, 'ville', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $tel = filter_input(INPUT_POST, 'tel', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
                 // Récupérer les composants de la date
                 $jour = filter_input(INPUT_POST, 'jour', FILTER_SANITIZE_NUMBER_INT);
@@ -50,7 +46,7 @@ class ControleurClient {
                 error_log("Date formatée: $date_naissance");
 
                 // Validation des données
-                if ($nom && $prenom && $email && $mdp && $rue && $codePostal && $ville && $tel && $jour && $mois && $annee) {
+                if ($nom && $prenom && $email && $mdp && $jour && $mois && $annee) {
                     error_log("Validation OK - Vérification email existant...");
                     $client_existant = GestionClient::getClientParEmail($email);
                     if ($client_existant) {
@@ -60,7 +56,7 @@ class ControleurClient {
                     }
 
                     error_log("Email disponible - Création du client via GestionClient::creerClient()");
-                    if (GestionClient::creerClient($nom, $prenom, $email, $mdp, $date_naissance, $rue, $codePostal, $ville, $tel)) {
+                    if (GestionClient::creerClient($nom, $prenom, $email, $mdp, $date_naissance)) {
                         error_log("Client créé avec succès - Redirection vers connexion");
                         header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&inscription=success');
                         return;
