@@ -311,11 +311,25 @@ class GestionClient extends ModelePDO {
         try {
             error_log("Tentative de connexion pour l'email : " . $email);
             $client = self::getClientParEmail($email);
-            if ($client && password_verify($mot_de_passe, $client->mdp)) {
-                error_log("Connexion réussie pour l'utilisateur : " . $client->prenom);
-                return $client;
+            if ($client) {
+                if (empty($client->mdp)) {
+                    error_log("Mot de passe NULL ou vide pour l'utilisateur : " . $email);
+                    // On retourne une erreur explicite
+                    return 'mdp_null';
+                }
+                if (strpos($client->mdp, '$2y$') !== 0) {
+                    error_log("Mot de passe mal encodé (pas bcrypt) pour l'utilisateur : " . $email . ", mdp= " . $client->mdp);
+                    return 'mdp_invalide';
+                }
+                if (password_verify($mot_de_passe, $client->mdp)) {
+                    error_log("Connexion réussie pour l'utilisateur : " . $client->prenom);
+                    return $client;
+                } else {
+                    error_log("Mot de passe incorrect pour l'utilisateur : " . $email);
+                    return false;
+                }
             }
-            error_log("Échec de la connexion pour l'email : " . $email);
+            error_log("Aucun client trouvé pour l'email : " . $email);
             return false;
         } catch (Exception $e) {
             error_log("Erreur lors de la vérification de connexion : " . $e->getMessage());

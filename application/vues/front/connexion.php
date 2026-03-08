@@ -17,6 +17,12 @@ if (isset($_GET['error'])) {
         case 'connexion_requise':
             $error_message = 'Vous devez être connecté pour effectuer cette action.';
             break;
+        case 'mdp_null':
+            $error_message = 'Le mot de passe de ce compte est vide ou non défini. Merci de réinitialiser votre mot de passe ou de contacter le support.';
+            break;
+        case 'mdp_invalide':
+            $error_message = 'Le mot de passe de ce compte est mal encodé (non sécurisé). Merci de réinitialiser votre mot de passe ou de contacter le support.';
+            break;
     }
 }
 

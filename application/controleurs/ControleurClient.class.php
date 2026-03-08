@@ -101,7 +101,14 @@ class ControleurClient {
                 
                 // Vérifier si le client existe et si les identifiants sont corrects
                 $client = GestionClient::verifierConnexion($email, $mdp);
-                
+                if ($client === 'mdp_null') {
+                    header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&error=mdp_null');
+                    return;
+                }
+                if ($client === 'mdp_invalide') {
+                    header('Location: index.php?controleur=Client&action=afficherConnexion&display=minimal&error=mdp_invalide');
+                    return;
+                }
                 if ($client) {
                     // Démarrer la session si ce n'est pas déjà fait
                     if (session_status() === PHP_SESSION_NONE) {

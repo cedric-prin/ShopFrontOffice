@@ -1,0 +1,8 @@
+# Redirection automatique vers public/
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/prin_boutique/public/
+RewriteRule ^(.*)$ /prin_boutique/public/$1 [L]
+
+# Désactiver le listing de répertoire
+Options -Indexes
+
